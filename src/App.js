@@ -51,12 +51,12 @@ const WhoseTurn = ({winrow,turn}) => {
 }
 
 
-const ResetButton = ({winrow,setGrid,setTurn,setWinrow}) => {
+const ResetButton = ({winrow,turn,setGrid,setTurn,setWinrow}) => {
   if(winrow===false) return null;
   return <div className="text-center">
     <button type="button" onClick={e=>{
       setGrid(initialGrid());
-      setTurn(false);
+      setTurn(!turn);
       setWinrow(false);
     }}>Reset</button>
   </div>;
@@ -81,7 +81,7 @@ const App = () => {
     <div style={{marginTop:'1em'}}>
       <WhoseTurn turn={turn} winrow={winrow} />
       <Result winrow={winrow} grid={grid} />
-      <ResetButton winrow={winrow} setTurn={setTurn} setGrid={setGrid} setWinrow={setWinrow} />
+      <ResetButton winrow={winrow} turn={turn} setTurn={setTurn} setGrid={setGrid} setWinrow={setWinrow} />
     </div>
   </>);
 }
