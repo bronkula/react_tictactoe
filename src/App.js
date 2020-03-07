@@ -1,26 +1,87 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+const initialGrid = () => ([false,false,false,false,false,false,false,false,false]);
+
+const winRows = [
+	[0,1,2], // Row 1
+	[3,4,5], // Row 2
+	[6,7,8], // Row 3
+	[0,3,6], // Column 1
+	[1,4,7], // Column 2
+	[2,5,8], // Column 3
+	[0,4,8], // Diagonal 1
+	[2,4,6]  // Diagonal 2
+];
+
+const checkWin = (grid,setWinrow) => {
+  for(let r of winRows) {
+    if(r.every((o)=>grid[o]===1)) setWinrow([...r]);
+    else if(r.every((o)=>grid[o]===0)) setWinrow([...r]);
+  }
+  if(!grid.some(o=>o===false)) setWinrow(true);
+}
+
+const handleSquareClick = (i,grid,turn,setTurn,setGrid,setWinrow) => {
+  if(grid[i]!==false) return;
+  grid[i] = turn ? 1 : 0;
+  setTurn(!turn);
+  setGrid([...grid]);
+  checkWin(grid,setWinrow);
+}
+
+const Result = ({winrow,grid}) => {
+  if(!winrow) return null;
+  let winner = winrow===true?false:grid[winrow[0]];
+  return <div className="text-center">
+    {
+      winner===false? 'Stalemate!':
+      winner===0? 'Player X wins!':
+      'Player O wins!'
+    }
+  </div>;
+}
+
+const WhoseTurn = ({winrow,turn}) => {
+  if(winrow) return null;
+  return <div className="text-center">Player {turn?'O':'X'}, it's your turn.</div>;
+}
+
+
+const ResetButton = ({winrow,setGrid,setTurn,setWinrow}) => {
+  if(winrow===false) return null;
+  return <div className="text-center">
+    <button type="button" onClick={e=>{
+      setGrid(initialGrid());
+      setTurn(false);
+      setWinrow(false);
+    }}>Reset</button>
+  </div>;
+}
+
+
+
+const App = () => {
+  let [turn,setTurn] = useState(false);
+  let [winrow,setWinrow] = useState(false);
+  let [grid,setGrid] = useState(initialGrid());
+
+  return (<>
+    <div className="grid">
+      {grid.map((o,i)=><div key={i} className={`grid-square ${winrow!==false && winrow!==true && winrow.some(o=>o===i)?'winner':''}`} onClick={e=>{
+        if(winrow!==false) return;
+        handleSquareClick(i,grid,turn,setTurn,setGrid,setWinrow);
+      }}>
+        {o===false?"":o===0?"X":"O"}
+      </div>)}
     </div>
-  );
+    <div style={{marginTop:'1em'}}>
+      <WhoseTurn turn={turn} winrow={winrow} />
+      <Result winrow={winrow} grid={grid} />
+      <ResetButton winrow={winrow} setTurn={setTurn} setGrid={setGrid} setWinrow={setWinrow} />
+    </div>
+  </>);
 }
 
 export default App;
