@@ -16,11 +16,13 @@ const winRows = [
 ];
 
 const checkWin = (grid,setWinrow) => {
+  let winner = false;
   for(let r of winRows) {
-    if(r.every((o)=>grid[o]===1)) setWinrow([...r]);
-    else if(r.every((o)=>grid[o]===0)) setWinrow([...r]);
+    if(r.every((o)=>grid[o]===1)) winner = [...r];
+    else if(r.every((o)=>grid[o]===0)) winner = [...r];
   }
-  if(!grid.some(o=>o===false)) setWinrow(true);
+  if(!winner && !grid.some(o=>o===false)) winner = true;
+  setWinrow(winner);
 }
 
 const handleSquareClick = (i,grid,turn,setTurn,setGrid,setWinrow) => {
