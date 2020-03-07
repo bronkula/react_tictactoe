@@ -53,7 +53,7 @@ const WhoseTurn = ({winrow,turn}) => {
 
 const ResetButton = ({winrow,turn,setGrid,setTurn,setWinrow}) => {
   if(winrow===false) return null;
-  return <div>
+  return <div className="reset">
     <button type="button" onClick={e=>{
       setGrid(initialGrid());
       setTurn(!turn);
@@ -70,18 +70,19 @@ const App = () => {
   let [grid,setGrid] = useState(initialGrid());
 
   return (<>
-    <div className="grid">
+    <div className={`grid `}>
       {grid.map((o,i)=><div key={i} className={`grid-square ${winrow!==false && winrow!==true && winrow.some(o=>o===i)?'winner':''}`} onClick={e=>{
         if(winrow!==false) return;
         handleSquareClick(i,grid,turn,setTurn,setGrid,setWinrow);
       }}>
         {o===false?"":o===0?"X":"O"}
       </div>)}
+
+      <ResetButton winrow={winrow} turn={turn} setTurn={setTurn} setGrid={setGrid} setWinrow={setWinrow} />
     </div>
     <div className="scenario text-center">
       <WhoseTurn turn={turn} winrow={winrow} />
       <Result winrow={winrow} grid={grid} />
-      <ResetButton winrow={winrow} turn={turn} setTurn={setTurn} setGrid={setGrid} setWinrow={setWinrow} />
     </div>
     <div className="text-center"><a href="https://github.com/bronkula/react_tictactoe">Project on Github</a></div>
   </>);
