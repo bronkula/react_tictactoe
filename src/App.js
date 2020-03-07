@@ -78,11 +78,12 @@ const App = () => {
         {o===false?"":o===0?"X":"O"}
       </div>)}
     </div>
-    <div style={{marginTop:'1em'}}>
+    <div className="scenario">
       <WhoseTurn turn={turn} winrow={winrow} />
       <Result winrow={winrow} grid={grid} />
       <ResetButton winrow={winrow} turn={turn} setTurn={setTurn} setGrid={setGrid} setWinrow={setWinrow} />
     </div>
+    <div><a href="https://github.com/bronkula/react-tictactoe">Project on Github</a></div>
   </>);
 }
 
